@@ -1,5 +1,10 @@
 #include "token.hpp"
 
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <string>
+
 std::string argumentsToString(int argc, char ** argv) 
 // convert command line arguments vector into input stream 
 {

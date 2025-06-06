@@ -5,9 +5,10 @@
 #include <exception>
 #include <filesystem>
 
+#include "constants.hpp"
 #include "token.hpp"
+#include "database.hpp"
 
-const std::filesystem::path DatabasesDirectory = "databases";
 std::filesystem::path currentDatabase;
 
 enum class Operator : unsigned char {
@@ -18,12 +19,12 @@ enum class Object : unsigned char {
   None, Table, Database
 };
 
-std::map<std::string, Operator> OperatorMap {
+const std::map<std::string, Operator> OperatorMap {
   {"create", Operator::Create},
   {"use", Operator::Use}
 };
 
-std::map<std::string, Object> ObjectMap {
+const std::map<std::string, Object> ObjectMap {
   {"table", Object::Table}, 
   {"database", Object::Database}
 };
@@ -85,36 +86,31 @@ void useDatabase(std::istream& is) {
   std::cout << "Using database " << currentDatabase << ".\n";
 }
 
-void initialSetup() {
-  if (!std::filesystem::exists(DatabasesDirectory)) {
-    std::filesystem::create_directory(DatabasesDirectory);
-    std::cout << "Database Directory Created.\n";
-  }
-}
-
 int main(int argc, char ** argv) {
-  initialSetup();
+  Database db{"pibbles"};
+  Table lol{"pibbles","lol"};
+  // initialSetup();
 
-  std::istringstream is {argumentsToString(argc, argv)};
-  Operator op;
-  while (is >> op) {
-    try {
-      switch (op) {
-        case Operator::None:
-          std::cerr << "main::BadSyntaxError\n";
-          break;
-        case Operator::Create:
-          create(is);
-          break;
-        case Operator::Use:
-          useDatabase(is);
-          break;
-      }
-    }
-    catch (const std::runtime_error& e) {
-      std::cerr << e.what() << "\n";
-      exit(1);
-    }
-  }
+  // std::istringstream is {argumentsToString(argc, argv)};
+  // Operator op;
+  // while (is >> op) {
+  //   try {
+  //     switch (op) {
+  //       case Operator::None:
+  //         std::cerr << "main::BadSyntaxError\n";
+  //         break;
+  //       case Operator::Create:
+  //         create(is);
+  //         break;
+  //       case Operator::Use:
+  //         useDatabase(is);
+  //         break;
+  //     }
+  //   }
+  //   catch (const std::runtime_error& e) {
+  //     std::cerr << e.what() << "\n";
+  //     exit(1);
+  //   }
+  // }
   return 0;
 }
