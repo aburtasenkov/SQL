@@ -37,14 +37,6 @@ Table::Table(std::string database, std::string tableName)
       this->_rows.push_back (this->_getRow(iss));
     }
   }
-
-
-  for (auto l : this->_rows) {
-    for (auto x : l) {
-      std::cout << std::get<int>(x) << ",";
-    }
-    std::cout << "\n";
-  }
 }
 
 Table::~Table() { }
