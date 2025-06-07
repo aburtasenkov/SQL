@@ -10,7 +10,8 @@ enum class Type : unsigned char {
   Integer
 };
 
-extern const std::map<std::string, Type> TypeMap;
+extern const std::map<std::string, Type> TypeMapEnum;
+extern const std::map<Type, std::string> TypeMapString;
 
 struct Header{
   Type type;
