@@ -2,4 +2,5 @@ g++ -o main main.cpp \
       database.cpp \
       table.cpp \
       token.cpp \
-      constants.cpp
+      constants.cpp \
+      logic.cpp
