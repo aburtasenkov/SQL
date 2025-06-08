@@ -5,7 +5,7 @@
 
 #include "database.hpp"
 
-// extern Database currentDatabase;
+extern Database currentDatabase;
 
 void create(std::istream&); // SQL Create Operation 
 

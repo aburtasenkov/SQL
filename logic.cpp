@@ -6,7 +6,7 @@
 #include "token.hpp"
 #include "database.hpp"
 
-// Database currentDatabase;
+Database currentDatabase;
 
 void create(std::istream& is)
 // SQL Create Operation
@@ -36,9 +36,7 @@ Database createDatabase(std::istream& is)
 void useDatabase(std::istream& is) 
 // Change Current Database in Use
 {
-  // TODO USE DATABASE
-  // std::string databaseName = getToken(is);
-  // if (!std::filesystem::exists(DatabasesDirectory/databaseName)) throw std::runtime_error("useDatabase::MissingDatabaseError");
-  // currentDatabase = databaseName;
-  // std::cout << "Using database " << currentDatabase << ".\n";
+  std::string databaseName = getToken(is);
+  currentDatabase = Database(databaseName);
+  std::cout << "Using database " << databaseName << ".\n";
 }
