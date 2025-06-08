@@ -5,6 +5,16 @@
 #include <algorithm>
 #include <string>
 
+const std::map<std::string, Operator> OperatorMap {
+  {"create", Operator::Create},
+  {"use", Operator::Use}
+};
+
+const std::map<std::string, Object> ObjectMap {
+  {"table", Object::Table}, 
+  {"database", Object::Database}
+};
+
 std::string argumentsToString(int argc, char ** argv) 
 // Convert Command Line Arguments Vector into Input Stream 
 {
@@ -26,4 +36,31 @@ std::string getToken(std::istream& is)
     }
   );
   return token;
+}
+
+template <typename T>
+T getMapValue(std::istream& is, const std::map<std::string, T>& map) 
+// Return Value from a Map of a String-Key
+{
+  std::string token = getToken(is);
+  try {
+    return map.at(token);
+  }
+  catch (const std::out_of_range& e) {
+    return T::None;
+  }
+}
+
+std::istream& operator>>(std::istream& is, Operator& op)
+// Read Next Operator Token
+{
+  op = getMapValue(is, OperatorMap);
+  return is;
+}
+
+std::istream& operator>>(std::istream& is, Object& obj) 
+// Read Next Object Token
+{
+  obj = getMapValue(is, ObjectMap);
+  return is;
 }
