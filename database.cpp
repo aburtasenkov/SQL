@@ -7,16 +7,19 @@
 
 #include "constants.hpp"
 
-Database::Database(std::string databaseName)
-  :_databaseName(databaseName)
-{
+Database::Database() {
   // If Database Directory Does Not Exist Yet - Create It 
   if (!std::filesystem::exists(DatabasesDirectory)) {
     std::filesystem::create_directory(DatabasesDirectory);
     std::cout << "Database Directory Does Not Exist Yet...\n"
               << "Database Directory Created.\n";
   }
+}
 
+Database::Database(std::string databaseName)
+  :Database()
+{
+  this->_databaseName = databaseName;
   // If Database Does Not Exist Yet - Create It and Return
   if (!std::filesystem::exists(DatabasesDirectory / databaseName)) {
     std::filesystem::create_directory(DatabasesDirectory / databaseName);

@@ -7,11 +7,12 @@
 
 class Database {
 public:
+  Database();
   Database(std::string);
   ~Database();
 
   void createTable(std::string);
 private:
   std::string _databaseName;
-  std::vector<std::string> _tables;
+  std::vector<std::string> _tables; // Vector of All Tables (Not Including the File Extension)
 };
