@@ -6,7 +6,7 @@
 #include <string>
 
 std::string argumentsToString(int argc, char ** argv) 
-// convert command line arguments vector into input stream 
+// Convert Command Line Arguments Vector into Input Stream 
 {
   std::ostringstream stream;
   for (int i = 1; i < argc; ++i) {
@@ -16,7 +16,7 @@ std::string argumentsToString(int argc, char ** argv)
 }
 
 std::string getToken(std::istream& is) 
-// return one lowercase word from is
+// Return One Lowercase Word from is
 {
   std::string token;
   is >> token;
