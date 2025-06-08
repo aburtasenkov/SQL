@@ -30,10 +30,7 @@ Database createDatabase(std::istream& is)
 // Create New Database
 {
   std::string databaseName = getToken(is);
-  if (std::filesystem::exists(DatabasesDirectory/databaseName)) throw std::runtime_error("createDatabase::DatabaseAlreadyExistsError");
-  std::filesystem::create_directory(DatabasesDirectory/databaseName);
-  std::cout << "Database " << databaseName << " created.\n";
-  return Database("pibbles");
+  return Database(databaseName);
 }
 
 void useDatabase(std::istream& is) 
