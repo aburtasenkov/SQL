@@ -127,7 +127,7 @@ std::vector<fieldType> Table::_getRow(std::istream& is)
         row.push_back(std::stoi(fieldValue));
         break;
       default:
-        throw std::runtime_error("Error parsing field " + std::to_string(currentIndex) +
+        throw std::runtime_error("Error parsing field #" + std::to_string(currentIndex) +
                                  " in table " + this->_databaseName + "." + this->_tableName +
                                  ": unsupported type or invalid value '" + fieldValue + "'");
     }
