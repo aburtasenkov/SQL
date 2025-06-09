@@ -15,8 +15,10 @@ enum class Object : unsigned char {
 extern const std::map<std::string, Operator> OperatorMap;
 extern const std::map<std::string, Object> ObjectMap;
 
-std::string argumentsToString(int argc, char ** argv); // Return One Lowercase Word from is
-std::string getToken(std::istream& is); // Convert Command Line Arguments Vector into Input Stream
+std::string argumentsToString(int, char **); // Return One Lowercase Word from is
+
+void toLower(std::string&);
+std::string getToken(std::istream&); // Convert Command Line Arguments Vector into Input Stream
 
 template <typename T>
 T getMapValue(std::istream&, const std::map<std::string, T>&);  // Return Value from a Map of a String-Key

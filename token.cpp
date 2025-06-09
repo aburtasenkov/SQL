@@ -25,16 +25,19 @@ std::string argumentsToString(int argc, char ** argv)
   return stream.str();
 }
 
+void toLower(std::string& str) {
+  std::transform(str.begin(), str.end(), str.begin(), 
+  [](unsigned char ch){
+    return std::tolower(ch);          
+  });
+}
+
 std::string getToken(std::istream& is) 
 // Return One Lowercase Word from is
 {
   std::string token;
   is >> token;
-  std::transform(token.begin(), token.end(), token.begin(), 
-    [](unsigned char ch){
-      return std::tolower(ch);          
-    }
-  );
+  toLower(token);
   return token;
 }
 
