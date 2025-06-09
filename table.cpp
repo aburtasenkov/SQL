@@ -9,6 +9,7 @@
 #include <map>
 
 #include "constants.hpp"
+#include "token.hpp"
 
 const std::map<std::string, Type> TypeMapEnum{
   {"Integer", Type::Integer}
