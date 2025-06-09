@@ -18,12 +18,6 @@ const std::map<Type, std::string> TypeMapString {
   {Type::Integer, "Integer"}
 };
 
-std::string readUntilChar(std::istream& is, char delimiter) {
-  std::string str;
-  std::getline(is, str, delimiter);
-  return str;
-}
-
 Table::Table(std::string database, std::string tableName)
   :_databaseName(database), _tableName(tableName)
 {

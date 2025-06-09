@@ -37,8 +37,6 @@ class Table {
   std::vector<fieldType> _getRow(std::istream&);
 };
 
-std::string readUntilChar(std::istream&, char);
-
 // Example
 /*
 Primary Key, Age, Money

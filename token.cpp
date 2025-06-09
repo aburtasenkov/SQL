@@ -64,3 +64,9 @@ std::istream& operator>>(std::istream& is, Object& obj)
   obj = getMapValue(is, ObjectMap);
   return is;
 }
+
+std::string readUntilChar(std::istream& is, char delimiter) {
+  std::string str;
+  std::getline(is, str, delimiter);
+  return str;
+}

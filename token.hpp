@@ -23,3 +23,6 @@ T getMapValue(std::istream&, const std::map<std::string, T>&);  // Return Value 
 
 std::istream& operator>>(std::istream&, Operator&); // Read Next Operator Token
 std::istream& operator>>(std::istream&, Object&); // Read Next Object Token
+
+
+std::string readUntilChar(std::istream&, char);
