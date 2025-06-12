@@ -6,21 +6,18 @@
 #include <sstream>
 #include <iostream>
 #include <exception>
-#include <map>
 
 #include "constants.hpp"
 #include "token.hpp"
 
-const std::map<std::string, Type> TypeMapEnum{
-  {"Integer", Type::Integer}
-};
+Table::Table(std::string databaseName, std::string tableName, std::vector<Header> headers)
+  :_databaseName(databaseName), _tableName(tableName), _headers(headers)
+// Initializer for Creating New Tables
+{ }
 
-const std::map<Type, std::string> TypeMapString {
-  {Type::Integer, "Integer"}
-};
-
-Table::Table(std::string database, std::string tableName)
-  :_databaseName(database), _tableName(tableName)
+Table::Table(std::string databaseName, std::string tableName)
+  :_databaseName(databaseName), _tableName(tableName)
+// Initializer for Existing Tables
 {
   // Read Headers
   std::ifstream ifs{DatabasesDirectory / this->_databaseName / (this->_tableName + FileExtension)};

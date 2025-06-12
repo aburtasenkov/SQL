@@ -3,15 +3,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <map>
 #include <variant>
 
-enum class Type : unsigned char {
-  Integer
-};
-
-extern const std::map<std::string, Type> TypeMapEnum;
-extern const std::map<Type, std::string> TypeMapString;
+#include "token.hpp"
 
 struct Header{
   Type type;
@@ -23,7 +17,8 @@ using fieldType = std::variant<int>;
 // CURRENTLY ONLY INTEGER SUPPORT
 class Table {
   public:
-  Table(std::string, std::string);
+  Table(std::string, std::string, std::vector<Header>); // Initializer for Creating New Tables
+  Table(std::string, std::string);  // Initializer for Existing Tables
   ~Table();
   private:
   std::string _databaseName;
