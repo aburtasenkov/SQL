@@ -11,3 +11,6 @@ extern const char FieldDelimiter; // Delimiter For a Field in .csv Table of a Da
 // Delimiters for Type of a Field 
 extern const char TypeOpener;
 extern const char TypeCloser;
+// Delimiters for Parameters in SQL Syntax 
+extern const char ParameterOpener;
+extern const char ParameterCloser;

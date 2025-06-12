@@ -8,3 +8,5 @@ const std::string FileExtension = ".csv";
 const char FieldDelimiter = ',';
 const char TypeOpener = '(';
 const char TypeCloser = ')';
+const char ParameterOpener = '(';
+const char ParameterCloser = ')';
