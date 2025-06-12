@@ -25,11 +25,9 @@ std::string argumentsToString(int argc, char ** argv)
   return stream.str();
 }
 
-void toLower(std::string& str) {
-  std::transform(str.begin(), str.end(), str.begin(), 
-  [](unsigned char ch){
-    return std::tolower(ch);          
-  });
+std::string toLower(std::string str) {
+  for (char& ch : str) ch = std::tolower(ch);
+  return str;
 }
 
 std::string getToken(std::istream& is) 
@@ -37,7 +35,10 @@ std::string getToken(std::istream& is)
 {
   std::string token;
   is >> token;
-  toLower(token);
+  std::transform(token.begin(), token.end(), token.begin(), 
+  [](unsigned char ch){
+    return std::tolower(ch);          
+  });
   return token;
 }
 

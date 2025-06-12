@@ -17,7 +17,7 @@ extern const std::map<std::string, Object> ObjectMap;
 
 std::string argumentsToString(int, char **); // Return One Lowercase Word from is
 
-void toLower(std::string&);
+std::string toLower(std::string);
 std::string getToken(std::istream&); // Convert Command Line Arguments Vector into Input Stream
 
 template <typename T>
