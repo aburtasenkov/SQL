@@ -15,6 +15,14 @@ const std::map<std::string, Object> ObjectMap {
   {"database", Object::Database}
 };
 
+const std::map<std::string, Type> TypeMapEnum{
+  {"INTEGER", Type::Integer}
+};
+
+const std::map<Type, std::string> TypeMapString {
+  {Type::Integer, "INTEGER"}
+};
+
 std::string argumentsToString(int argc, char ** argv) 
 // Convert Command Line Arguments Vector into Input Stream 
 {

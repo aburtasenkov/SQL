@@ -12,8 +12,15 @@ enum class Object : unsigned char {
   None, Table, Database
 };
 
+enum class Type : unsigned char {
+  Integer
+};
+
 extern const std::map<std::string, Operator> OperatorMap;
 extern const std::map<std::string, Object> ObjectMap;
+
+extern const std::map<std::string, Type> TypeMapEnum;
+extern const std::map<Type, std::string> TypeMapString;
 
 std::string argumentsToString(int, char **); // Return One Lowercase Word from is
 
