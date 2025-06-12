@@ -16,11 +16,11 @@ const std::map<std::string, Object> ObjectMap {
 };
 
 const std::map<std::string, Type> TypeMapEnum{
-  {"INTEGER", Type::Integer}
+  {"integer", Type::Integer}
 };
 
 const std::map<Type, std::string> TypeMapString {
-  {Type::Integer, "INTEGER"}
+  {Type::Integer, "integer"}
 };
 
 std::string argumentsToString(int argc, char ** argv) 
@@ -43,6 +43,18 @@ std::string getToken(std::istream& is)
 {
   std::string token;
   is >> token;
+  std::transform(token.begin(), token.end(), token.begin(), 
+  [](unsigned char ch){
+    return std::tolower(ch);          
+  });
+  return token;
+}
+
+std::string getToken(std::istream& is, char delim) 
+// Return One Lowercase Word from is
+// Read Only Until delim
+{
+  std::string token = readUntilChar(is, delim);
   std::transform(token.begin(), token.end(), token.begin(), 
   [](unsigned char ch){
     return std::tolower(ch);          
