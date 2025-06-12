@@ -47,3 +47,7 @@ void Database::createTable(std::string tableName) {
   std::ofstream ofs {DatabasesDirectory / this->_databaseName / (tableName + FileExtension)};
   std::cout << "Table '" << tableName << "' Was Created.\n";
 }
+
+const std::string& Database::name() {
+  return _databaseName;
+}
