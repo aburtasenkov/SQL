@@ -36,16 +36,12 @@ Database::Database(std::string databaseName)
 
 Database::~Database() {}
 
-void Database::createTable(std::string tableName) {
-  // If Already Exists - Nothing to Create
+bool Database::tableExists(std::string tableName) {
   if (std::find(this->_tables.begin(), this->_tables.end(), tableName) != this->_tables.end()) {
     std::cout << "Table '" << tableName << "' Already Exists.\n";
-    return;
+    return true;
   }
-
-  // TODO - Initializer List for Fields
-  std::ofstream ofs {DatabasesDirectory / this->_databaseName / (tableName + FileExtension)};
-  std::cout << "Table '" << tableName << "' Was Created.\n";
+  return false;
 }
 
 const std::string& Database::name() {

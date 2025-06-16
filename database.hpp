@@ -11,7 +11,7 @@ public:
   Database(std::string);
   ~Database();
 
-  void createTable(std::string);
+  bool tableExists(std::string);
 
   const std::string& name();
 private:
