@@ -38,7 +38,6 @@ Database::~Database() {}
 
 bool Database::tableExists(std::string tableName) {
   if (std::find(this->_tables.begin(), this->_tables.end(), tableName) != this->_tables.end()) {
-    std::cout << "Table '" << tableName << "' Already Exists.\n";
     return true;
   }
   return false;
