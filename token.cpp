@@ -47,7 +47,7 @@ std::string getToken(std::istream& is)
 {
   std::string token;
   is >> token;
-  transformString(token, std::tolower);
+  transformString(token, static_cast<int(*)(int)>(std::tolower));
   return token;
 }
 
@@ -56,7 +56,7 @@ std::string getToken(std::istream& is, char delim)
 // Read Only Until delim
 {
   std::string token = readUntilChar(is, delim);
-  transformString(token, std::tolower);
+  transformString(token, static_cast<int(*)(int)>(std::tolower));
   return token;
 }
 
