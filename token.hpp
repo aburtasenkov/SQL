@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <functional>
 
 enum class Operator : unsigned char {
   None, Create, Use
@@ -24,7 +25,7 @@ extern const std::map<Type, std::string> TypeMapString;
 
 std::string argumentsToString(int, char **); // Convert Command Line Arguments Vector into Input Stream 
 
-std::string toLower(std::string);
+void transformString(std::string&, int (*)(int)); // Transform str, Applying func to Each Character
 
 // Return One Lowercase Word from is ...
 std::string getToken(std::istream&);  // Until Whitespace

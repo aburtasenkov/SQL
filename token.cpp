@@ -33,9 +33,13 @@ std::string argumentsToString(int argc, char ** argv)
   return stream.str();
 }
 
-std::string toLower(std::string str) {
-  for (char& ch : str) ch = std::tolower(ch);
-  return str;
+void transformString(std::string& str, int (*func)(int))
+// Transform str, Applying func to Each Character
+{
+  std::transform(str.begin(), str.end(), str.begin(), 
+  [func](unsigned char ch){
+    return func(ch);          
+  });
 }
 
 std::string getToken(std::istream& is) 
@@ -43,10 +47,7 @@ std::string getToken(std::istream& is)
 {
   std::string token;
   is >> token;
-  std::transform(token.begin(), token.end(), token.begin(), 
-  [](unsigned char ch){
-    return std::tolower(ch);          
-  });
+  transformString(token, std::tolower);
   return token;
 }
 
@@ -55,10 +56,7 @@ std::string getToken(std::istream& is, char delim)
 // Read Only Until delim
 {
   std::string token = readUntilChar(is, delim);
-  std::transform(token.begin(), token.end(), token.begin(), 
-  [](unsigned char ch){
-    return std::tolower(ch);          
-  });
+  transformString(token, std::tolower);
   return token;
 }
 
