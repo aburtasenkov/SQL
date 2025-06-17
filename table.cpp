@@ -25,7 +25,7 @@ Table::Table(std::string databaseName, std::string tableName)
     std::string headers;
     std::getline(ifs, headers);
     std::istringstream iss{headers};
-    this->_headers = this->_readHeaders(iss);
+    this->_headers = this->readHeaders(iss, this->_databaseName, this->_tableName);
   }
   // Read Rows
   {
@@ -43,8 +43,7 @@ Table::~Table() {
   // Log Headers
   for (unsigned int i = 0; i < this->_headers.size(); ++i) {
     const Header& header = this->_headers[i];
-    ofs << header.name << TypeOpener << TypeMapString.at(header.type) << TypeCloser;
-    if (i != this->_headers.size() - 1) ofs << FieldDelimiter;
+    ofs << header.name << " " << TypeMapString.at(header.type) << FieldDelimiter << " ";
   }
   ofs << "\n";
 
@@ -62,47 +61,26 @@ Table::~Table() {
   }
 }
 
-Header Table::_getHeader(std::istream& is) 
-// Return 1 Header of Header Line
-{
-  std::string HeaderName = readUntilChar(is, TypeOpener);
-  if (HeaderName.empty()) {
-    throw std::runtime_error("Error Parsing Header Name in '" + this->_databaseName + "." + this->_tableName + "' Table\n");
-  }
-
-  std::string HeaderTypeStr = readUntilChar(is, TypeCloser);
-  if (HeaderTypeStr.empty()) {
-    throw std::runtime_error("Error Parsing Header Type For '" + HeaderName + 
-                             "' In '" + this->_databaseName + "." + this->_tableName + "' Table\n");
-  }
-
-  Type HeaderType;
-  try {
-    HeaderType = TypeMapEnum.at(HeaderTypeStr);
-  }
-  catch (const std::out_of_range& e) {
-    throw std::runtime_error("Error Converting Header Type For '" + HeaderName + 
-                             "' In '" + this->_databaseName + "." + this->_tableName + "' Table\n");
-  }
-  return {HeaderType, HeaderName};
-}
-
-std::vector<Header> Table::_readHeaders(std::istream& is) 
+std::vector<Header> Table::readHeaders(std::istream& is, const std::string databaseName, const std::string tableName) 
 // Create Vector of All Headers of a Line
 {
   std::vector<Header> headers;
 
-  headers.push_back(this->_getHeader(is));
-
-  char ch;
-  while (is >> ch) {
-    if (ch == FieldDelimiter) {
-      headers.push_back(this->_getHeader(is));
+  std::string headerName, headerTypeStr;
+  while (is >> headerName >> headerTypeStr) {
+    transformString(headerTypeStr, std::tolower);
+    // Strip Trailing Comma if Present
+    if (!headerTypeStr.empty() && headerTypeStr.back() == ',') headerTypeStr.pop_back();
+  
+    Type headerType;
+    try {
+      headerType = TypeMapEnum.at(headerTypeStr);
     } 
-    else {
-      is.unget();
-      break;
+    catch (const std::out_of_range& e) {
+      throw std::runtime_error("Unknown Type '" + headerTypeStr + "' For Header '" + headerName + 
+                               "' In '" + databaseName + "." + tableName + "' Table\n");
     }
+    headers.push_back({headerType, headerName});
   }
 
   return headers;

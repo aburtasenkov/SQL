@@ -20,14 +20,12 @@ class Table {
   Table(std::string, std::string, std::vector<Header>); // Initializer for Creating New Tables
   Table(std::string, std::string);  // Initializer for Existing Tables
   ~Table();
+  static std::vector<Header> readHeaders(std::istream&, const std::string, const std::string);
   private:
   std::string _databaseName;
   std::string _tableName;
   std::vector<Header> _headers;
   std::vector<std::vector<fieldType>> _rows;
-  
-  Header _getHeader(std::istream&);
-  std::vector<Header> _readHeaders(std::istream&);
 
   std::vector<fieldType> _getRow(std::istream&);
 };
