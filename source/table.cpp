@@ -7,20 +7,20 @@
 #include <iostream>
 #include <exception>
 
-#include "constants.hpp"
+#include "constant.hpp"
 #include "token.hpp"
 
-Table::Table(std::string databaseName, std::string tableName, std::vector<Header> headers)
+TBL::Table::Table(std::string databaseName, std::string tableName, std::vector<Header> headers)
   :_databaseName(databaseName), _tableName(tableName), _headers(headers)
 // Initializer for Creating New Tables
 { }
 
-Table::Table(std::string databaseName, std::string tableName)
+TBL::Table::Table(std::string databaseName, std::string tableName)
   :_databaseName(databaseName), _tableName(tableName)
 // Initializer for Existing Tables
 {
   // Read Headers
-  std::ifstream ifs{DatabasesDirectory / this->_databaseName / (this->_tableName + FileExtension)};
+  std::ifstream ifs{Constant::DatabasesDirectory / this->_databaseName / (this->_tableName + Constant::FileExtension)};
   {
     std::string headers;
     std::getline(ifs, headers);
@@ -37,13 +37,13 @@ Table::Table(std::string databaseName, std::string tableName)
   }
 }
 
-Table::~Table() {
-  std::ofstream ofs{DatabasesDirectory / this->_databaseName / (this->_tableName + FileExtension)};
+TBL::Table::~Table() {
+  std::ofstream ofs{Constant::DatabasesDirectory / this->_databaseName / (this->_tableName + Constant::FileExtension)};
 
   // Log Headers
   for (unsigned int i = 0; i < this->_headers.size(); ++i) {
     const Header& header = this->_headers[i];
-    ofs << header.name << " " << TypeMapString.at(header.type) << FieldDelimiter << " ";
+    ofs << header.name << " " << SQL::TypeMapString.at(header.type) << Constant::FieldDelimiter << " ";
   }
   ofs << "\n";
 
@@ -52,8 +52,8 @@ Table::~Table() {
     for (unsigned int i = 0; i < row.size(); ++i) {
       switch (this->_headers[i].type)
       {
-      case Type::Integer:
-        ofs << std::get<int>(row[i]) << FieldDelimiter; 
+      case SQL::Type::Integer:
+        ofs << std::get<int>(row[i]) << Constant::FieldDelimiter; 
         break;
       }
     }
@@ -61,20 +61,20 @@ Table::~Table() {
   }
 }
 
-std::vector<Header> Table::readHeaders(std::istream& is, const std::string databaseName, const std::string tableName) 
+std::vector<TBL::Header> TBL::Table::readHeaders(std::istream& is, const std::string databaseName, const std::string tableName) 
 // Create Vector of All Headers of a Line
 {
   std::vector<Header> headers;
 
   std::string headerName, headerTypeStr;
   while (is >> headerName >> headerTypeStr) {
-    transformString(headerTypeStr, std::tolower);
+    Token::transformString(headerTypeStr, std::tolower);
     // Strip Trailing Comma if Present
     if (!headerTypeStr.empty() && headerTypeStr.back() == ',') headerTypeStr.pop_back();
   
-    Type headerType;
+    SQL::Type headerType;
     try {
-      headerType = TypeMapEnum.at(headerTypeStr);
+      headerType = SQL::TypeMapEnum.at(headerTypeStr);
     } 
     catch (const std::out_of_range& e) {
       throw std::runtime_error("Unknown Type '" + headerTypeStr + "' For Header '" + headerName + 
@@ -86,14 +86,14 @@ std::vector<Header> Table::readHeaders(std::istream& is, const std::string datab
   return headers;
 }
 
-std::vector<fieldType> Table::_getRow(std::istream& is) 
+std::vector<TBL::fieldType> TBL::Table::_getRow(std::istream& is) 
 // Create Data From 1 Row
 {
-  std::vector<fieldType> row;
+  std::vector<TBL::fieldType> row;
   for (unsigned int currentIndex = 0; currentIndex < this->_headers.size(); ++currentIndex) {
-    std::string fieldValue = readUntilChar(is, FieldDelimiter);
+    std::string fieldValue = Token::readUntilChar(is, Constant::FieldDelimiter);
     switch (this->_headers[currentIndex].type) {
-      case Type::Integer:
+      case SQL::Type::Integer:
         row.push_back(std::stoi(fieldValue));
         break;
       default:

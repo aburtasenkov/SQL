@@ -1,28 +1,29 @@
+#include "logic.hpp"
+
 #include <iostream>
 #include <filesystem>
 
-#include "logic.hpp"
-#include "constants.hpp"
-#include "token.hpp"
-#include "database.hpp"
+#include "source/constant.hpp"
+#include "source/token.hpp"
+#include "source/database.hpp"
 
-Database currentDatabase;
+DB::Database currentDatabase;
 
 void create(std::istream& is)
 // SQL Create Operation
 {
-  Object obj;
-  is >> obj;
+  SQL::Object obj;
+  Token::operator>>(is, obj);
   switch (obj) {
-    case Object::None: 
+    case SQL::Object::None: 
       std::cerr << "create::BadSyntaxError\n";
       break;
-    case Object::Table:
+    case SQL::Object::Table:
     {
       createTable(is);
       break;
     }
-    case Object::Database:
+    case SQL::Object::Database:
       createDatabase(is);
       break;
   }
@@ -32,21 +33,21 @@ void createTable(std::istream& is)
 // Create Table 
 {
   is.ignore(1); // Skip Whiteline Character Delimiting TABLE keyword and Table's Name
-  std::string tableName = readUntilChar(is, ParameterOpener);
+  std::string tableName = Token::readUntilChar(is, Constant::ParameterOpener);
 
   // Check if Table Already Exists
   if (currentDatabase.tableExists(tableName)) {
-    readUntilChar(is, ParameterCloser); // Skip All The Parameters
+    Token::readUntilChar(is, Constant::ParameterCloser); // Skip All The Parameters
     throw std::runtime_error("Error Creating Table '" + tableName + "' In '" 
                           + currentDatabase.name() + "' Database. '" + tableName + "' Already Exists.\n");
   }
 
-  std::string parameters = readUntilChar(is, ParameterCloser);
+  std::string parameters = Token::readUntilChar(is, Constant::ParameterCloser);
 
   std::istringstream iss{parameters};
-  std::vector<Header> headers = Table::readHeaders(iss, currentDatabase.name(), tableName);
+  std::vector<TBL::Header> headers = TBL::Table::readHeaders(iss, currentDatabase.name(), tableName);
 
-  Table tbl{currentDatabase.name(), tableName, headers};
+  TBL::Table tbl{currentDatabase.name(), tableName, headers};
 }
 
 /*
@@ -54,17 +55,17 @@ SYNTAX FOR TABLE CREATION
 CREATE TABLE tableName (FIELD DATATYPE, FIELD DATATYPE)
 */
 
-Database createDatabase(std::istream& is)
+DB::Database createDatabase(std::istream& is)
 // Create New Database
 {
-  std::string databaseName = getToken(is);
-  return Database(databaseName);
+  std::string databaseName = Token::getToken(is);
+  return DB::Database(databaseName);
 }
 
 void useDatabase(std::istream& is) 
 // Change Current Database in Use
 {
-  std::string databaseName = getToken(is);
-  currentDatabase = Database(databaseName);
+  std::string databaseName = Token::getToken(is);
+  currentDatabase = DB::Database(databaseName);
   std::cout << "Using database " << databaseName << ".\n";
 }

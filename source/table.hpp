@@ -6,28 +6,31 @@
 #include <variant>
 
 #include "token.hpp"
+#include "SQL.hpp"
 
-struct Header{
-  Type type;
-  std::string name;
-};
-
-using fieldType = std::variant<int>;
-
-// CURRENTLY ONLY INTEGER SUPPORT
-class Table {
-  public:
-  Table(std::string, std::string, std::vector<Header>); // Initializer for Creating New Tables
-  Table(std::string, std::string);  // Initializer for Existing Tables
-  ~Table();
-  static std::vector<Header> readHeaders(std::istream&, const std::string, const std::string);
-  private:
-  std::string _databaseName;
-  std::string _tableName;
-  std::vector<Header> _headers;
-  std::vector<std::vector<fieldType>> _rows;
-
-  std::vector<fieldType> _getRow(std::istream&);
+namespace TBL {
+  struct Header{
+    SQL::Type type;
+    std::string name;
+  };
+  
+  using fieldType = std::variant<int>;
+  
+  // CURRENTLY ONLY INTEGER SUPPORT
+  class Table {
+    public:
+    Table(std::string, std::string, std::vector<Header>); // Initializer for Creating New Tables
+    Table(std::string, std::string);  // Initializer for Existing Tables
+    ~Table();
+    static std::vector<Header> readHeaders(std::istream&, const std::string, const std::string);
+    private:
+    std::string _databaseName;
+    std::string _tableName;
+    std::vector<Header> _headers;
+    std::vector<std::vector<fieldType>> _rows;
+    
+    std::vector<fieldType> _getRow(std::istream&);
+  };
 };
 
 // Example

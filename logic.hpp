@@ -3,13 +3,13 @@
 #include <filesystem>
 #include <iostream>
 
-#include "database.hpp"
+#include "source/database.hpp"
 
-extern Database currentDatabase;
+extern DB::Database currentDatabase;
 
 // SQL Commands
 void create(std::istream&); // Create Operation 
 void createTable(std::istream&); // Create Table 
 
-Database createDatabase(std::istream&); // Create New Database
+DB::Database createDatabase(std::istream&); // Create New Database
 void useDatabase(std::istream&); // Change Current Database in Use
