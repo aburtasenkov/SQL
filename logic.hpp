@@ -7,7 +7,9 @@
 
 extern Database currentDatabase;
 
-void create(std::istream&); // SQL Create Operation 
+// SQL Commands
+void create(std::istream&); // Create Operation 
+void createTable(std::istream&); // Create Table 
 
 Database createDatabase(std::istream&); // Create New Database
 void useDatabase(std::istream&); // Change Current Database in Use
