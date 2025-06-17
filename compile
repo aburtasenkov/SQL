@@ -1,6 +1,7 @@
 g++ -o main main.cpp \
-      database.cpp \
-      table.cpp \
-      token.cpp \
-      constants.cpp \
-      logic.cpp
+      source/database.cpp \
+      source/table.cpp \
+      source/token.cpp \
+      source/constant.cpp \
+      source/SQL.cpp \
+      logic.cpp \
