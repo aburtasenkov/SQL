@@ -48,6 +48,7 @@ void createTable(std::istream& is)
   std::vector<TBL::Header> headers = TBL::Table::readHeaders(iss, currentDatabase.name(), tableName);
 
   TBL::Table tbl{currentDatabase.name(), tableName, headers};
+  std::cout << "Table '" + currentDatabase.name() + "." + tableName + "' Was Created.\n";
 }
 
 /*
