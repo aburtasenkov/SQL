@@ -42,25 +42,9 @@ void createTable(std::istream& is)
   }
 
   std::string parameters = readUntilChar(is, ParameterCloser);
-  std::vector<Header> headers;
-  
-  // Parse Fields
-  std::istringstream iss{parameters};
-  std::string fieldName;
-  while (iss >> fieldName) {
-    iss.ignore(1);
-    std::string fieldTypeStr = getToken(iss, FieldDelimiter); // Uses std::getline, So Need To Skip 1 Char
 
-    Type fieldType;
-    try {
-      fieldType = TypeMapEnum.at(fieldTypeStr);
-    }
-    catch (const std::out_of_range& e) {
-      throw std::runtime_error("Error Converting Header Type '" + fieldTypeStr + "' For '" + fieldName + 
-                              "' In '" + tableName + "' Table\n");
-    }
-    headers.push_back(Header{fieldType, fieldName});
-  }
+  std::istringstream iss{parameters};
+  std::vector<Header> headers = Table::readHeaders(iss, currentDatabase.name(), tableName);
 
   Table tbl{currentDatabase.name(), tableName, headers};
 }
