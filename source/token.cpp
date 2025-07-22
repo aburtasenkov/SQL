@@ -72,7 +72,7 @@ std::string Token::readUntilChar(std::istream& is, char delimiter) {
   return str;
 }
 
-std::vector<std::string> Token::readValues(std::istringstream& is) 
+std::vector<std::string> Token::readValues(std::istream& is) 
 // Read Values That Need To Be Inserted Somewhere
 // Syntax: Value1, Value2, Value3, ...
 {

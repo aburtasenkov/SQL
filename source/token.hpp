@@ -21,6 +21,6 @@ namespace Token{
   
   
   std::string readUntilChar(std::istream&, char);
-  std::vector<std::string> readValues(std::istringstream& is); // Read Values That Need To Be Inserted Somewhere
+  std::vector<std::string> readValues(std::istream& is); // Read Values That Need To Be Inserted Somewhere
                                                         // Syntax: Value1, Value2, Value3, ...
 };
