@@ -30,7 +30,7 @@ DB::Database::Database(std::string databaseName)
   // Code For Existing Databases
   // Read All Tables
   for (const auto& dirEntry : std::filesystem::directory_iterator{Constant::DatabasesDirectory / this->_databaseName}) {
-    this->_tables.push_back(dirEntry.path().stem());
+    this->_tables.emplace_back(dirEntry.path().stem());
   }
 }
 
