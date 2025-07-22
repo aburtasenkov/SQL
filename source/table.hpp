@@ -12,6 +12,9 @@ namespace TBL {
   struct Header{
     SQL::Type type;
     std::string name;
+
+    Header(const SQL::Type& t, const std::string& n)
+    :type(t), name(n) {}
   };
   
   using fieldType = std::variant<int>;
@@ -24,7 +27,8 @@ namespace TBL {
     ~Table();
     static std::vector<Header> readHeaders(std::istream&, const std::string, const std::string);
     const std::vector<Header>& getHeaders() { return _headers; }
-    void insert(const std::vector<fieldType>& v) { _rows.emplace_back(v); }
+    void insert(const std::vector<fieldType>& v) { _rows.push_back(v); }
+    std::vector<fieldType> createRow(std::istream&);
 
     private:
     std::string _databaseName;
@@ -32,7 +36,6 @@ namespace TBL {
     std::vector<Header> _headers;
     std::vector<std::vector<fieldType>> _rows;
     
-    std::vector<fieldType> _getRow(std::istream&);
   };
 };
 

@@ -32,7 +32,7 @@ TBL::Table::Table(std::string databaseName, std::string tableName)
     std::string row;
     while (std::getline(ifs, row)) {
       std::istringstream iss{row};
-      this->_rows.push_back (this->_getRow(iss));
+      this->_rows.push_back(this->createRow(iss));
     }
   }
 }
@@ -80,27 +80,42 @@ std::vector<TBL::Header> TBL::Table::readHeaders(std::istream& is, const std::st
       throw std::runtime_error("Unknown Type '" + headerTypeStr + "' For Header '" + headerName + 
                                "' In '" + databaseName + "." + tableName + "' Table\n");
     }
-    headers.push_back({headerType, headerName});
+    headers.emplace_back(headerType, headerName);
   }
 
   return headers;
 }
 
-std::vector<TBL::fieldType> TBL::Table::_getRow(std::istream& is) 
+std::vector<TBL::fieldType> TBL::Table::createRow(std::istream& is) 
 // Create Data From 1 Row
 {
-  std::vector<TBL::fieldType> row;
-  for (unsigned int currentIndex = 0; currentIndex < this->_headers.size(); ++currentIndex) {
-    std::string fieldValue = Token::readUntilChar(is, Constant::FieldDelimiter);
-    switch (this->_headers[currentIndex].type) {
+  std::vector<fieldType> row;
+  std::vector<std::string> fields = Token::readValues(is);
+
+  if (fields.size() != this->_headers.size()) throw std::runtime_error("Mismatched amount of value fields (" + std::to_string(fields.size()) + 
+                                               ") and header fields (" + std::to_string(this->_headers.size()) +")");
+
+  for (size_t i = 0; i < this->_headers.size(); ++i) {
+    switch(this->_headers[i].type) {
       case SQL::Type::Integer:
-        row.push_back(std::stoi(fieldValue));
+        try {
+          row.emplace_back(std::stoi(fields[i]));
+        }
+        catch (std::invalid_argument& e) {
+          std::cerr << "Error in function " << e.what() << "\n";
+          throw std::runtime_error("Error parsing '" + fields[i] + "' into an integer type");
+        }
+        catch (std::out_of_range& e) {
+          std::cerr << "Error in function '" << e.what() << "'\n";
+          throw std::runtime_error("Error truncating '" + fields[i] + "' into an integer type. Value too high/low");
+        }
         break;
       default:
-        throw std::runtime_error("Error parsing field #" + std::to_string(currentIndex) +
+        throw std::runtime_error("Error parsing field #" + std::to_string(i + 1) +
                                  " in table " + this->_databaseName + "." + this->_tableName +
-                                 ": unsupported type or invalid value '" + fieldValue + "'");
+                                 ": unsupported type or invalid value '" + fields[i] + "'");
     }
   }
+
   return row;
 }
