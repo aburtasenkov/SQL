@@ -9,7 +9,7 @@ extern DB::Database currentDatabase;
 
 // SQL Commands
 void create(std::istream&); // Create Operation 
-void createTable(std::istream&); // Create Table 
+TBL::Table createTable(std::istream&); // Create Table 
 
 void insert(std::istream&); // SQL Insert Command
 void insertInto(std::istream&);
