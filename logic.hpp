@@ -11,5 +11,8 @@ extern DB::Database currentDatabase;
 void create(std::istream&); // Create Operation 
 void createTable(std::istream&); // Create Table 
 
+void insert(std::istream&); // SQL Insert Command
+void insertInto(std::istream&);
+
 DB::Database createDatabase(std::istream&); // Create New Database
 void useDatabase(std::istream&); // Change Current Database in Use

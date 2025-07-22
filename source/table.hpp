@@ -23,6 +23,9 @@ namespace TBL {
     Table(std::string, std::string);  // Initializer for Existing Tables
     ~Table();
     static std::vector<Header> readHeaders(std::istream&, const std::string, const std::string);
+    const std::vector<Header>& getHeaders() { return _headers; }
+    void insert(const std::vector<fieldType>& v) { _rows.emplace_back(v); }
+
     private:
     std::string _databaseName;
     std::string _tableName;

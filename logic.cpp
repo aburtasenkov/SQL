@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <filesystem>
+#include <cassert>
+#include <sstream>
+#include <vector>
+#include <string>
 
 #include "source/constant.hpp"
 #include "source/token.hpp"
@@ -16,8 +20,7 @@ void create(std::istream& is)
   Token::operator>>(is, obj);
   switch (obj) {
     case SQL::Object::None: 
-      std::cerr << "create::BadSyntaxError\n";
-      break;
+      throw std::runtime_error("create::BadSyntaxError");
     case SQL::Object::Table:
     {
       createTable(is);
@@ -55,6 +58,56 @@ void createTable(std::istream& is)
 SYNTAX FOR TABLE CREATION
 CREATE TABLE tableName (FIELD DATATYPE, FIELD DATATYPE)
 */
+
+void insert(std::istream& is) 
+// SQL insert command
+{
+  SQL::Keyword keyword;
+  Token::operator>>(is, keyword);
+  switch (keyword)
+  {
+  case SQL::Keyword::None:
+    throw std::runtime_error("insert::BadSyntaxError");
+  case SQL::Keyword::Into:
+    insertInto(is);
+    break;
+  }
+}
+
+void insertInto(std::istream& is) {
+  std::string tableName;
+  is >> tableName;
+  TBL::Table table{currentDatabase.name(), tableName};
+
+  // skip
+  {
+    SQL::Keyword values;
+    Token::operator>>(is, values);
+    assert(values == SQL::Keyword::Values);
+  }
+
+  // read data to be inserted
+  Token::readUntilChar(is, Constant::ParameterOpener);
+  std::istringstream iss{Token::readUntilChar(is, Constant::ParameterCloser)};
+  std::vector<std::string> values = Token::readValues(iss);
+
+  const auto& headers = table.getHeaders();
+
+  assert(headers.size() == values.size());
+
+  std::vector<TBL::fieldType> entry;
+  for (size_t i = 0; i < headers.size(); ++i) {
+    switch (headers[i].type)
+    {
+    case SQL::Type::Integer:
+      TBL::fieldType field = std::stoi(values[i]);
+      entry.emplace_back(field);
+      break;
+    }
+  }
+  
+  table.insert(entry);
+}
 
 DB::Database createDatabase(std::istream& is)
 // Create New Database

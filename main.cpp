@@ -19,6 +19,9 @@ int main(int argc, char ** argv) {
         case SQL::Operator::Use:
           useDatabase(is);
           break;
+        case SQL::Operator::Insert:
+          insert(is);
+          break;
       }
     }
     catch (const std::runtime_error& e) {

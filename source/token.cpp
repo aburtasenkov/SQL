@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #include "SQL.hpp"
 
@@ -51,6 +52,13 @@ std::istream& Token::operator>>(std::istream& is, SQL::Operator& op)
   return is;
 }
 
+std::istream& Token::operator>>(std::istream& is, SQL::Keyword& keyword)
+// Read Next Keyword Token
+{
+  keyword = SQL::getMapValue(is, SQL::KeywordMap);
+  return is;
+}
+
 std::istream& Token::operator>>(std::istream& is, SQL::Object& obj) 
 // Read Next Object Token
 {
@@ -62,4 +70,22 @@ std::string Token::readUntilChar(std::istream& is, char delimiter) {
   std::string str;
   std::getline(is, str, delimiter);
   return str;
+}
+
+std::vector<std::string> Token::readValues(std::istringstream& is) 
+// Read Values That Need To Be Inserted Somewhere
+// Syntax: Value1, Value2, Value3, ...
+{
+  std::vector<std::string> values;
+  std::string token;
+
+  while (std::getline(is, token, ',')) {
+    token.erase(0, token.find_first_not_of(" \t\n"));
+    token.erase(token.find_last_not_of(" \t\n") + 1);
+    if (!token.empty()) {
+      values.push_back(token);
+    }
+  }
+
+  return values;
 }
