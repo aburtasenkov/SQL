@@ -26,18 +26,17 @@ void create(std::istream& is)
       break;
     }
     case SQL::Object::Database:
-      createDatabase(is);
+      currentDatabase = createDatabase(is);
       break;
   }
 }
 
-void createTable(std::istream& is)
+TBL::Table createTable(std::istream& is)
 // Create Table 
 {
   is.ignore(1); // Skip Whiteline Character Delimiting TABLE keyword and Table's Name
   std::string tableName = Token::readUntilChar(is, Constant::ParameterOpener);
 
-  // Check if Table Already Exists
   if (currentDatabase.tableExists(tableName)) {
     Token::readUntilChar(is, Constant::ParameterCloser); // Skip All The Parameters
     throw std::runtime_error("Error Creating Table '" + tableName + "' In '" 
@@ -49,8 +48,10 @@ void createTable(std::istream& is)
   std::istringstream iss{parameters};
   std::vector<TBL::Header> headers = TBL::Table::readHeaders(iss, currentDatabase.name(), tableName);
 
-  TBL::Table tbl{currentDatabase.name(), tableName, headers};
+  TBL::Table table{currentDatabase.name(), tableName, headers};
   std::cout << "Table '" + currentDatabase.name() + "." + tableName + "' Was Created.\n";
+
+  return table;
 }
 
 /*
@@ -74,37 +75,22 @@ void insert(std::istream& is)
 }
 
 void insertInto(std::istream& is) {
+  // Read current table
   std::string tableName;
   is >> tableName;
   TBL::Table table{currentDatabase.name(), tableName};
 
-  // skip
+  // skip values keyword
   {
     SQL::Keyword values;
     Token::operator>>(is, values);
     if (values != SQL::Keyword::Values) throw std::runtime_error("insertInto::BadInput");
   }
 
-  // read data to be inserted
+  // insert data
   Token::readUntilChar(is, Constant::ParameterOpener);
   std::istringstream iss{Token::readUntilChar(is, Constant::ParameterCloser)};
-  std::vector<std::string> values = Token::readValues(iss);
-
-  const auto& headers = table.getHeaders();
-
-  if (headers.size() != values.size()) throw std::runtime_error("insertInto::MismatchedHeaderValueCount");
-
-  std::vector<TBL::fieldType> entry;
-  for (size_t i = 0; i < headers.size(); ++i) {
-    switch (headers[i].type)
-    {
-    case SQL::Type::Integer:
-      TBL::fieldType field = std::stoi(values[i]);
-      entry.emplace_back(field);
-      break;
-    }
-  }
-
+  std::vector<TBL::fieldType> entry = table.createRow(iss);
   table.insert(entry);
 }
 
