@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <filesystem>
-#include <cassert>
 #include <sstream>
 #include <vector>
 #include <string>
@@ -83,7 +82,7 @@ void insertInto(std::istream& is) {
   {
     SQL::Keyword values;
     Token::operator>>(is, values);
-    assert(values == SQL::Keyword::Values);
+    if (values != SQL::Keyword::Values) throw std::runtime_error("insertInto::BadInput");
   }
 
   // read data to be inserted
@@ -93,7 +92,7 @@ void insertInto(std::istream& is) {
 
   const auto& headers = table.getHeaders();
 
-  assert(headers.size() == values.size());
+  if (headers.size() != values.size()) throw std::runtime_error("insertInto::MismatchedHeaderValueCount");
 
   std::vector<TBL::fieldType> entry;
   for (size_t i = 0; i < headers.size(); ++i) {
@@ -105,7 +104,7 @@ void insertInto(std::istream& is) {
       break;
     }
   }
-  
+
   table.insert(entry);
 }
 
